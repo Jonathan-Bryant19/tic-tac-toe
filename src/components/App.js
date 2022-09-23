@@ -4,7 +4,7 @@ import { useState } from 'react'
 function App() {
   const x = require('../assets/X.png')
   const o = require('../assets/O.png')
-
+  const [activePlayer, setActivePlayer] = useState(1)
   const [boardStatus, setBoardStatus] = useState({
     tl: null, tm: null, tr: null, 
     ml: null, mm: null, mr: null,
@@ -13,22 +13,32 @@ function App() {
   // <img src={o} className='game-image img-fluid'/>
 
   const handleClick = (e) => {
-    console.log(e.target.id)
-    setBoardStatus(boardStatus[e.target.id] = 'taken')
-    console.log(boardStatus)
+    const value = e.target.id
+    activePlayer === 1 ? setActivePlayer(2) : setActivePlayer(1)
+    setBoardStatus({
+      ...boardStatus,
+      [value]: "taken"
+    })
   }
-
+  
   return (
     <div className='container'>
       {/* Main Header */}
       <div className="jumbotron mt-3">
-        <h1 className="display-4">Welcome to Tic Tac Toe!</h1>
+        <h1 className="display-2">Welcome to Tic Tac Toe!</h1>
         <p className="lead">Play a simple game of Tic Tac Toe...</p>
         <hr className="my-4" />
         <p>Press the button to start a new game.</p>
         <a className="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
       </div>
-      {/* Add Game Info Text Here */}
+      {/* Game Status */}
+      <div className='container'>
+        <div className='row' align='center'>
+          <div className='col'>
+            <h1 className='display-4'>{`Player ${activePlayer}'s Turn!`}</h1>
+          </div>
+        </div>
+      </div>
       {/* Game Board */}
       <div className='container my-5'>
         {/* First Row */}
