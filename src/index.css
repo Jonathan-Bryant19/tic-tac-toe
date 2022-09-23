@@ -7,7 +7,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.tic-box {
+  height: 160px;
+  max-width: 160px;
+}
+
+.game-image {
+  height: 155px;
+  width: 155px;
 }
