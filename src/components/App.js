@@ -1,23 +1,29 @@
-import '../App.css';
-import { useState } from 'react'
+import '../App.css'
+import { useState, useEffect } from 'react'
 
 function App() {
   const x = require('../assets/X.png')
   const o = require('../assets/O.png')
-  let currentImage
   const [activePlayer, setActivePlayer] = useState(1)
+  const [winner, setWinner] = useState(null)
   const [boardStatus, setBoardStatus] = useState({
     tl: null, tm: null, tr: null, 
     ml: null, mm: null, mr: null,
     bl: null, bm: null, br: null
   })
+  const [imageStatus, setImageStatus] = useState({
+    tl: null, tm: null, tr: null, 
+    ml: null, mm: null, mr: null,
+    bl: null, bm: null, br: null
+  })
   
-  activePlayer === 1 ? currentImage = x : currentImage = o
+  useEffect(() => {
+    checkForWinner()
+  }, [boardStatus])
 
   const handleClick = (e) => {
     if (boardStatus[e.target.id] || e.target.id === "") {
-      console.log("That's already been taken")
-      return null
+      alert("That spot has already been taken. Please choose another spot.")
     } else {
       const value = e.target.id
       activePlayer === 1 ? setActivePlayer(2) : setActivePlayer(1)
@@ -28,6 +34,28 @@ function App() {
     }
   }
 
+  const checkForWinner = () => {
+    if (boardStatus['tl'] === boardStatus['tm'] && boardStatus['tm'] === boardStatus['tr']) {
+      if (boardStatus['tl'] !== null) setWinner(boardStatus['tl'])
+    } else if (boardStatus['ml'] === boardStatus['mm'] && boardStatus['mm'] === boardStatus['mr']) {
+      if (boardStatus['ml'] !== null) setWinner(boardStatus['ml'])
+    } else if (boardStatus['bl'] === boardStatus['bm'] && boardStatus['bm'] === boardStatus['br']) {
+      if (boardStatus['bl'] !== null) setWinner(boardStatus['bl'])
+    } else if (boardStatus['tl'] === boardStatus['ml'] && boardStatus['ml'] === boardStatus['bl']) {
+      if (boardStatus['tl'] !== null) setWinner(boardStatus['tl'])
+    } else if (boardStatus['tm'] === boardStatus['mm'] && boardStatus['mm'] === boardStatus['bm']) {
+      if (boardStatus['tm'] !== null) setWinner(boardStatus['tm'])
+    } else if (boardStatus['tr'] === boardStatus['mr'] && boardStatus['mr'] === boardStatus['br']) {
+      if (boardStatus['tr'] !== null) setWinner(boardStatus['tr'])
+    } else if (boardStatus['tl'] === boardStatus['mm'] && boardStatus['mm'] === boardStatus['br']) {
+      if (boardStatus['tl'] !== null) setWinner(boardStatus['tl'])
+    } else if (boardStatus['tr'] === boardStatus['mm'] && boardStatus['mm'] === boardStatus['bl']) {
+      if (boardStatus['tr'] !== null) setWinner(boardStatus['tr'])
+    } else if (Object.values(boardStatus).every(elem => elem !== null)) {
+      setWinner('cats')
+    }
+  }
+
   const newGame = () => {
     setBoardStatus({
       tl: null, tm: null, tr: null, 
@@ -35,9 +63,9 @@ function App() {
       bl: null, bm: null, br: null
     })
     setActivePlayer(1)
+    setWinner(null)
   }
 
-  console.log(boardStatus)
   return (
     <div className='container'>
       {/* Main Header */}
@@ -52,7 +80,7 @@ function App() {
       <div className='container'>
         <div className='row' align='center'>
           <div className='col'>
-            <h1 className='display-4'>{`Player ${activePlayer}'s Turn!`}</h1>
+            <h1 className='display-4'>{winner ? winner === 'cats' ? `Cats Game!` : `Player ${winner} Wins!!!` : `Player ${activePlayer}'s Turn!`}</h1>
           </div>
         </div>
       </div>
